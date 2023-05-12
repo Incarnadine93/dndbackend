@@ -39,6 +39,7 @@ def create_character():
     print("i ran")
     user_uid = request.json.get('user_uid')
     userdata = request.json.get('userData')
+    name = userdata["name"]
     race = userdata["race"]
     class_type = userdata["class_type"]
     level = userdata["level"]
@@ -47,7 +48,7 @@ def create_character():
     print(user)
     if not user_uid or not user:
         return {'status': 'not ok', 'message': 'Unable to create character'}
-    character = Character(race=race, class_type=class_type, level=level, alignment=alignment, user_uid=user_uid)
+    character = Character(name=name, race=race, class_type=class_type, level=level, alignment=alignment, user_uid=user_uid)
     character.create()
     return {'status': 'ok', 'character': character.to_dict()}
 

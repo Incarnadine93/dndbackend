@@ -157,13 +157,15 @@ class User(db.Model, UserMixin):
     
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(400), unique=False, nullable=False)
     race = db.Column(db.String(400), unique=False, nullable=False)
     class_type = db.Column(db.String(400), unique=False, nullable=False)
     level = db.Column(db.Integer, unique=False, nullable=False)
     alignment = db.Column(db.String(400), unique=False, nullable=False)
     user_uid = db.Column(db.String, db.ForeignKey('user.uid'), nullable=False)
 
-    def __init__(self, race, class_type, level, alignment, user_uid):
+    def __init__(self, name, race, class_type, level, alignment, user_uid):
+        self.name = name
         self.race = race
         self.class_type = class_type
         self.level = level
@@ -177,10 +179,38 @@ class Character(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "name": self.name,
             "race": self.race,
             "class_type": self.class_type,
             "level": self.level,
             "alignment": self.alignment,
         }
 
+class XpThreshholds(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    level = db.Column(db.Integer, unique=False, nullable=False)
+    easy = db.Column(db.Integer, unique=False, nullable=False)
+    medium = db.Column(db.Integer, unique=False, nullable=False)
+    hard = db.Column(db.Integer, unique=False, nullable=False)
+    deadly = db.Column(db.Integer, unique=False, nullable=False)
 
+    def __init__(self, level, easy, medium, hard, deadly):
+        self.level = level
+        self.easy = easy
+        self.medium = medium
+        self.hard = hard
+        self.deadly = deadly
+
+    def saveXP(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "level": self.level,
+            "easy": self.easy,
+            "medium": self.medium,
+            "hard": self.hard,
+            "deadly": self.deadly,
+        }
